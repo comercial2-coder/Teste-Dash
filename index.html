@@ -22,28 +22,28 @@
             background-image: radial-gradient(circle at 50% 50%, #0a0e1f 0%, #020205 100%);
             animation: pulseBg 8s infinite alternate ease-in-out;
         }
-        @keyframes pulseBg { from { opacity: 0.9; transform: scale(1); } to { opacity: 1; transform: scale(1.02); } }
+        @keyframes pulseBg { from { opacity: 0.9; } to { opacity: 1; } }
 
         .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; z-index: 10; }
 
-        /* Estilo dos Seções com Azul Predominante */
         .section-glass { 
-            background: rgba(36, 55, 118, 0.15);
-            border: 1px solid var(--brand-blue);
-            border-radius: 20px; backdrop-filter: blur(20px);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(36, 55, 118, 0.3);
+            background: rgba(36, 55, 118, 0.12);
+            border: 1px solid rgba(36, 55, 118, 0.5);
+            border-radius: 20px; backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
 
         .section-global { padding: 4vh; height: 38vh; display: flex; align-items: center; justify-content: space-between; }
-        .label-tech { font-family: 'Orbitron'; font-size: 1.2vh; color: var(--brand-blue); letter-spacing: 4px; margin-bottom: 1vh; font-weight: 900; }
-        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.6); line-height: 1; }
+        .label-tech { font-family: 'Orbitron'; font-size: 1.2vh; color: var(--brand-blue); letter-spacing: 3px; margin-bottom: 0.5vh; font-weight: 900; }
+        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.5); line-height: 1; }
 
-        .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
-        .card-mid { padding: 2vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; }
-        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; }
+        .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 20vh; }
+        .card-mid { padding: 2.5vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; }
+        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; line-height: 1.1; }
+        .sub-val { font-family: 'Rajdhani'; font-size: 2vh; font-weight: 700; margin-top: 0.5vh; }
 
         .section-risk { flex: 1; padding: 2vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; }
         
         .chart-box { flex: 1; width: 104%; margin-left: -2%; margin-bottom: -2vh; }
     </style>
@@ -51,7 +51,7 @@
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px; margin-bottom: -1vh; opacity: 0.7;">NATURAL IMPORTS OPERATIONS</header>
+    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px; margin-bottom: -1vh;">NATURAL IMPORTS | PERFORMANCE</header>
 
     <section class="section-glass section-global">
         <div>
@@ -64,24 +64,27 @@
         </div>
         <div style="width: 28vh; height: 28vh; position: relative; display: flex; align-items: center; justify-content: center;">
             <canvas id="chartG"></canvas>
-            <div id="percG" style="position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; color: var(--brand-orange); text-shadow: 0 0 10px rgba(242,97,34,0.3);">0%</div>
+            <div id="percG" style="position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; color: var(--brand-orange);">0%</div>
         </div>
     </section>
 
     <section class="grid-mid">
         <div class="section-glass card-mid">
-            <p class="label-tech" style="color:rgba(255,255,255,0.4)">META DIÁRIA (PROJEÇÃO)</p>
+            <p class="label-tech">META DIÁRIA NECESSÁRIA</p>
             <div id="disp-meta-dia" class="val-mid">R$ 0</div>
+            <div class="sub-val" style="color: var(--text-secondary)">FALTA: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
         </div>
+        
         <div class="section-glass card-mid" style="border-left-color: var(--brand-orange);">
-            <p class="label-tech" style="color:rgba(255,255,255,0.4)">VENDIDO HOJE</p>
-            <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange); text-shadow: 0 0 15px rgba(242, 97, 34, 0.4);">R$ 0</div>
+            <p class="label-tech">VENDIDO HOJE</p>
+            <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange)">R$ 0</div>
+            <div class="sub-val" style="color: var(--text-secondary)">ATINGIDO: <span id="perc-dia-label" style="color: var(--brand-orange)">0%</span></div>
         </div>
     </section>
 
     <section class="section-glass section-risk">
-        <p class="label-tech" style="margin-left: 1vh; color: rgba(255,255,255,0.5)">CURVA DE RISCO DIÁRIO</p>
-        <div id="riskStatus">SINCRONIZANDO...</div>
+        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">CURVA DE RISCO (REALIZADO VS PROJEÇÃO)</p>
+        <div id="riskStatus">...</div>
         <div class="chart-box">
             <canvas id="chartR"></canvas>
         </div>
@@ -97,15 +100,17 @@
 
     const format = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
+    // CÁLCULO REAL DE DIAS ÚTEIS (Seg-Sex)
     function getBusinessDaysRemaining() {
-        const today = new Date();
-        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        let count = 0;
-        for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
-            const day = d.getDay();
-            if (day !== 0 && day !== 6) count++; 
+        const date = new Date();
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        let remaining = 0;
+        
+        for (let i = date.getDate(); i <= lastDay; i++) {
+            const day = new Date(date.getFullYear(), date.getMonth(), i).getDay();
+            if (day !== 0 && day !== 6) remaining++;
         }
-        return count || 1;
+        return remaining || 1;
     }
 
     function animate(id, target) {
@@ -116,10 +121,10 @@
         const dur = 1500;
         function step(t) {
             if (!startT) startT = t;
-            const progress = Math.min((t - startT) / dur, 1);
-            const curr = Math.floor(progress * (target - start) + start);
+            const prog = Math.min((t - startT) / dur, 1);
+            const curr = Math.floor(prog * (target - start) + start);
             el.innerText = format(curr);
-            if (progress < 1) requestAnimationFrame(step);
+            if (prog < 1) requestAnimationFrame(step);
         }
         lastV[id] = target;
         requestAnimationFrame(step);
@@ -129,19 +134,18 @@
         cg = new Chart(document.getElementById('chartG'), {
             type: 'doughnut',
             data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', 'rgba(36, 55, 118, 0.2)'], borderWidth: 0 }] },
-            options: { cutout: '82%', plugins: { tooltip: false }, animation: { duration: 2000 } }
+            options: { cutout: '82%', plugins: { tooltip: false } }
         });
 
         cr = new Chart(document.getElementById('chartR'), {
             type: 'line',
             data: { 
-                labels: ['0%','25%','50%','75%','100%'], 
+                labels: ['START', '25%', '50%', '75%', 'META'], 
                 datasets: [{ 
                     data: [0, 0, 0, 0, 0], 
                     borderColor: '#f26122', borderWidth: 8, fill: true,
                     backgroundColor: (ctx) => {
-                        const c = ctx.chart.ctx;
-                        const g = c.createLinearGradient(0, 0, 0, 300);
+                        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
                         g.addColorStop(0, 'rgba(242, 97, 34, 0.3)');
                         g.addColorStop(1, 'rgba(36, 55, 118, 0)');
                         return g;
@@ -149,11 +153,7 @@
                     tension: 0.4, pointRadius: 0
                 }]
             },
-            options: { 
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } },
-                plugins: { legend: false }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } }, plugins: { legend: false } }
         });
         update();
         setInterval(update, 30000);
@@ -164,54 +164,45 @@
             const res = await fetch(GVIZ_URL);
             const text = await res.text();
             const json = JSON.parse(text.substring(47, text.length - 2));
-            const rows = json.table.rows;
+            const row = json.table.rows[json.table.rows.length - 1].c;
+
+            const vHoje = row[1] ? (row[1].v || 0) : 0; // Col B
+            const mGlob = row[2] ? (row[2].v || 0) : 0; // Col C
+            const vMes = row[4] ? (row[4].v || 0) : 0;  // Col E
+
+            const gapGlob = Math.max(0, mGlob - vMes);
+            const diasUteis = getBusinessDaysRemaining();
+            const mDiaNec = gapGlob / diasUteis;
+            const faltaDia = Math.max(0, mDiaNec - vHoje);
             
-            // Pega a última linha válida que contenha dados
-            const lastDataRow = rows[rows.length - 1].c;
+            const percGlob = (vMes / (mGlob || 1)) * 100;
+            const percDia = (vHoje / (mDiaNec || 1)) * 100;
 
-            const vDia = lastDataRow[1] ? (lastDataRow[1].v || 0) : 0; // Col B
-            const metaGlobal = lastDataRow[2] ? (lastDataRow[2].v || 0) : 0; // Col C
-            const vTotalMes = lastDataRow[4] ? (lastDataRow[4].v || 0) : 0; // Col E
-
-            const gapGlobal = Math.max(0, metaGlobal - vTotalMes);
-            const diasRestantes = getBusinessDaysRemaining();
-            const metaDiaNec = gapGlobal / diasRestantes;
+            // Update Valores
+            animate('disp-meta-global', mGlob);
+            animate('disp-vendido-mes', vMes);
+            animate('disp-gap-global', gapGlob);
+            animate('disp-meta-dia', mDiaNec);
+            animate('disp-vendido-dia', vHoje);
+            animate('disp-falta-dia', faltaDia);
             
-            const percGlobal = (vTotalMes / (metaGlobal || 1)) * 100;
-            const percDia = (vDia / (metaDiaNec || 1)) * 100;
+            document.getElementById('perc-dia-label').innerText = Math.floor(percDia) + '%';
+            document.getElementById('percG').innerText = Math.floor(percGlob) + '%';
 
-            // UI com Animação
-            animate('disp-meta-global', metaGlobal);
-            animate('disp-vendido-mes', vTotalMes);
-            animate('disp-gap-global', gapGlobal);
-            animate('disp-meta-dia', metaDiaNec);
-            animate('disp-vendido-dia', vDia);
-            document.getElementById('percG').innerText = Math.floor(percGlobal) + '%';
-
-            // Charts
-            cg.data.datasets[0].data = [percGlobal, 100 - percGlobal];
+            // Gráficos
+            cg.data.datasets[0].data = [percGlob, 100 - percGlob];
             cg.update();
 
-            // Gráfico de Risco: Mostra a curva do dia
-            cr.data.datasets[0].data = [0, vDia*0.3, vDia*0.6, vDia*0.8, vDia];
-            cr.options.scales.y.max = Math.max(metaDiaNec, vDia);
+            cr.data.datasets[0].data = [0, vHoje*0.4, vHoje*0.7, vHoje*0.9, vHoje];
+            cr.options.scales.y.max = Math.max(mDiaNec, vHoje);
             cr.update();
 
             const st = document.getElementById('riskStatus');
-            if(percDia < 50) { 
-                st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; 
-                st.style.boxShadow = "0 0 20px #ff0044";
-            } else if(percDia < 100) { 
-                st.style.background = '#f26122'; st.innerText = 'RISCO: MÉDIO'; 
-                st.style.boxShadow = "0 0 20px #f26122";
-            } else { 
-                st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META ATINGIDA'; 
-                st.style.boxShadow = "0 0 20px #00ff88";
-            }
+            if(percDia < 50) { st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; }
+            else if(percDia < 100) { st.style.background = '#f26122'; st.innerText = 'RITMO: REGULAR'; }
+            else { st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META BATIDA'; }
 
-        } catch (e) { 
-            console.error("Erro na leitura:", e); 
-        }
+        } catch (e) { console.error(e); }
     }
     window.onload = init;
 </script>
