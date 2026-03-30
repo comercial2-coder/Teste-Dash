@@ -19,8 +19,10 @@
             font-family: 'Rajdhani', sans-serif; 
             height: 100vh; overflow: hidden;
             display: flex; align-items: center; justify-content: center; padding: 1.5vh;
-            background-image: radial-gradient(circle at 50% 50%, #0a0e1f 0%, #020205 100%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(36, 55, 118, 0.15) 0%, #020205 100%);
+            animation: pulseBg 10s infinite alternate;
         }
+        @keyframes pulseBg { from { opacity: 0.8; } to { opacity: 1; } }
 
         .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; z-index: 10; }
 
@@ -28,25 +30,25 @@
             background: rgba(36, 55, 118, 0.12);
             border: 1px solid rgba(36, 55, 118, 0.4);
             border-radius: 20px; backdrop-filter: blur(15px);
-            transition: all 0.5s ease;
         }
 
         .section-global { padding: 4vh; height: 38vh; display: flex; align-items: center; justify-content: space-between; }
         .label-tech { font-family: 'Orbitron'; font-size: 1.2vh; color: var(--brand-blue); letter-spacing: 3px; margin-bottom: 0.5vh; font-weight: 900; }
-        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.5); line-height: 1; transition: color 0.5s; }
+        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.5); line-height: 1; }
 
         .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 20vh; }
-        .card-mid { padding: 2.5vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; position: relative; }
-        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; line-height: 1.1; transition: color 0.5s; }
-        .sub-val { font-family: 'Rajdhani'; font-size: 2vh; font-weight: 700; margin-top: 0.5vh; }
+        .card-mid { padding: 2.5vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; transition: all 0.5s; }
+        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; line-height: 1.1; }
+        .sub-val { font-family: 'Rajdhani'; font-size: 2.2vh; font-weight: 700; margin-top: 0.5vh; }
 
         .section-risk { flex: 1; padding: 2vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; transition: all 0.3s; }
+        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; }
         
-        .chart-box { flex: 1; width: 104%; margin-left: -2%; margin-bottom: -2vh; }
-        
-        .success-text { color: var(--brand-green) !important; text-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important; }
-        .success-border { border-left-color: var(--brand-green) !important; }
+        .chart-box { flex: 1; width: 100%; height: 100%; margin-top: 1vh; }
+
+        /* Classes de Sucesso */
+        .status-green { border-left-color: var(--brand-green) !important; box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.1); }
+        .text-green { color: var(--brand-green) !important; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5) !important; }
     </style>
 </head>
 <body>
@@ -54,12 +56,12 @@
 <div class="main-container">
     <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px;">NATURAL IMPORTS | PERFORMANCE COMMAND</header>
 
-    <section class="section-glass section-global" id="glass-global">
+    <section class="section-glass section-global">
         <div>
-            <p class="label-tech">META GLOBAL DO MÊS</p>
+            <p class="label-tech">OBJETIVO GLOBAL DO MÊS</p>
             <div id="disp-meta-global" class="val-main">R$ 0</div>
             <div style="display:flex; gap:5vh; margin-top:2vh; font-family:'Orbitron'; font-size:1.8vh;">
-                <p style="color:var(--brand-blue)">TOTAL ACUMULADO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">ACUMULADO REAL <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
                 <p style="color:var(--brand-blue)">FALTA GERAL <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
@@ -70,21 +72,21 @@
     </section>
 
     <section class="grid-mid">
-        <div class="section-glass card-mid">
-            <p class="label-tech">META DO DIA (FIXA)</p>
+        <div class="section-glass card-mid" id="card-meta">
+            <p class="label-tech">META DIÁRIA FIXA</p>
             <div id="disp-meta-dia" class="val-mid">R$ 0</div>
-            <div class="sub-val" style="color: var(--text-secondary)" id="label-restante">RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
+            <div class="sub-val" id="label-falta" style="color: rgba(255,255,255,0.6)">RESTANTE: <span id="disp-falta-dia" style="color:#fff">R$ 0</span></div>
         </div>
         
-        <div class="section-glass card-mid" id="card-venda-dia">
+        <div class="section-glass card-mid" id="card-venda">
             <p class="label-tech">VENDIDO HOJE</p>
             <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange)">R$ 0</div>
-            <div class="sub-val" style="color: var(--text-secondary)">ATINGIMENTO: <span id="perc-dia-label" style="color: var(--brand-orange)">0%</span></div>
+            <div class="sub-val" style="color: rgba(255,255,255,0.6)">ATINGIMENTO: <span id="perc-dia-label" style="color:var(--brand-orange)">0%</span></div>
         </div>
     </section>
 
     <section class="section-glass section-risk">
-        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">RITMO DE VENDAS VS HORÁRIO (FINAL: 18:18)</p>
+        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">RITMO DE ENTREGA (DEADLINE 18:18)</p>
         <div id="riskStatus">...</div>
         <div class="chart-box">
             <canvas id="chartR"></canvas>
@@ -98,28 +100,18 @@
 
     let cg, cr;
     let lastV = {};
-    let metaDiaFixa = null; // Variável para travar a meta do dia
 
     const format = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
     function getBusinessDaysRemaining() {
-        const date = new Date();
-        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-        let remaining = 0;
-        for (let i = date.getDate(); i <= lastDay; i++) {
-            const day = new Date(date.getFullYear(), date.getMonth(), i).getDay();
-            if (day !== 0 && day !== 6) remaining++;
+        const d = new Date();
+        const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+        let count = 0;
+        for (let i = d.getDate(); i <= last; i++) {
+            const day = new Date(d.getFullYear(), d.getMonth(), i).getDay();
+            if (day !== 0 && day !== 6) count++;
         }
-        return remaining || 1;
-    }
-
-    function getTimeProgress() {
-        const now = new Date();
-        const start = new Date().setHours(8, 0, 0, 0);
-        const end = new Date().setHours(18, 18, 0, 0);
-        if (now < start) return 0;
-        if (now > end) return 100;
-        return ((now - start) / (end - start)) * 100;
+        return count || 1;
     }
 
     function animate(id, target) {
@@ -129,10 +121,9 @@
         let startT = null;
         function step(t) {
             if (!startT) startT = t;
-            const prog = Math.min((t - startT) / 1500, 1);
-            const curr = Math.floor(prog * (target - start) + start);
-            el.innerText = format(curr);
-            if (prog < 1) requestAnimationFrame(step);
+            const p = Math.min((t - startT) / 1000, 1);
+            el.innerText = format(Math.floor(p * (target - start) + start));
+            if (p < 1) requestAnimationFrame(step);
         }
         lastV[id] = target;
         requestAnimationFrame(step);
@@ -149,12 +140,17 @@
             type: 'line',
             data: { 
                 labels: ['08:00', '10:30', '13:00', '15:30', '18:18'], 
-                datasets: [
-                    { label: 'Real', data: [0, 0, 0, 0, 0], borderColor: '#f26122', borderWidth: 8, fill: true, backgroundColor: 'rgba(242, 97, 34, 0.2)', tension: 0.4, pointRadius: 0 },
-                    { label: 'Esperado', data: [0, 25, 50, 75, 100], borderColor: 'rgba(36, 55, 118, 0.3)', borderDash: [5,5], borderWidth: 2, fill: false, pointRadius: 0 }
-                ]
+                datasets: [{ 
+                    data: [0, 0, 0, 0, 0], 
+                    borderColor: '#f26122', borderWidth: 6, fill: true,
+                    backgroundColor: 'rgba(242, 97, 34, 0.15)', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#f26122'
+                }]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } }, plugins: { legend: false } }
+            options: { 
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron' } } } },
+                plugins: { legend: false }
+            }
         });
         update();
         setInterval(update, 30000);
@@ -172,71 +168,35 @@
             const vMesBase = row[4] ? (row[4].v || 0) : 0; 
 
             const vTotalRealTime = vMesBase + vHoje;
-            const gapMês = Math.max(0, mGlob - vTotalRealTime);
-            
-            // CÁLCULO DA META FIXA (SÓ RODA UMA VEZ)
-            if (metaDiaFixa === null) {
-                const diasRestantes = getBusinessDaysRemaining();
-                const gapInicial = Math.max(0, mGlob - vMesBase);
-                metaDiaFixa = gapInicial / diasRestantes;
+            const gapGeralReal = Math.max(0, mGlob - vTotalRealTime);
+
+            // LOGICA META ESTATICA NO STORAGE (RESISTE AO F5)
+            const hojeKey = new Date().toLocaleDateString();
+            let mDiaFixa = localStorage.getItem('meta_fixa_' + hojeKey);
+
+            if (!mDiaFixa) {
+                const dias = getBusinessDaysRemaining();
+                mDiaFixa = (mGlob - vMesBase) / dias;
+                localStorage.setItem('meta_fixa_' + hojeKey, mDiaFixa);
             }
+            mDiaFixa = parseFloat(mDiaFixa);
 
-            const faltaHoje = metaDiaFixa - vHoje;
-            const percGlobal = (vTotalRealTime / (mGlob || 1)) * 100;
-            const percDia = (vHoje / (metaDiaFixa || 1)) * 100;
-            const tProg = getTimeProgress();
+            const faltaHoje = mDiaFixa - vHoje;
+            const percDia = (vHoje / mDiaFixa) * 100;
+            const percGlob = (vTotalRealTime / mGlob) * 100;
 
-            // ANIMAÇÕES E VALORES
+            // UI
             animate('disp-meta-global', mGlob);
             animate('disp-vendido-mes', vTotalRealTime);
-            animate('disp-gap-global', gapMês);
-            animate('disp-meta-dia', metaDiaFixa);
+            animate('disp-gap-global', gapGeralReal);
+            animate('disp-meta-dia', mDiaFixa);
             animate('disp-vendido-dia', vHoje);
-            
-            // LÓGICA DE EXCEDENTE VS FALTA
-            const dispFalta = document.getElementById('disp-falta-dia');
-            const labelRestante = document.getElementById('label-restante');
-            if (faltaHoje <= 0) {
-                labelRestante.innerHTML = 'EXCEDENTE: <span id="disp-falta-dia" style="color: var(--brand-green)">' + format(Math.abs(faltaHoje)) + '</span>';
-            } else {
-                labelRestante.innerHTML = 'RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">' + format(faltaHoje) + '</span>';
-            }
 
-            document.getElementById('perc-dia-label').innerText = Math.floor(percDia) + '%';
-            document.getElementById('percG').innerText = Math.floor(percGlobal) + '%';
+            // Cores e Labels
+            const labelFalta = document.getElementById('label-falta');
+            const cardVenda = document.getElementById('card-venda');
+            const valVenda = document.getElementById('disp-vendido-dia');
+            const riskSt = document.getElementById('riskStatus');
 
-            // ESTILIZAÇÃO VERDE SE POSITIVO
-            const cardDia = document.getElementById('card-venda-dia');
-            const valDia = document.getElementById('disp-vendido-dia');
-            if (percDia >= 100) {
-                cardDia.classList.add('success-border');
-                valDia.classList.add('success-text');
-                document.getElementById('perc-dia-label').classList.add('success-text');
-            }
-
-            // GRÁFICOS
-            cg.data.datasets[0].data = [percGlobal, 100 - percGlobal];
-            cg.data.datasets[0].backgroundColor[0] = percGlobal >= (tProg * (mGlob/mGlob)) ? '#00ff88' : '#f26122';
-            cg.update();
-
-            cr.data.datasets[0].data = [0, null, null, null, vHoje];
-            cr.data.datasets[0].borderColor = percDia >= tProg ? '#00ff88' : '#f26122';
-            cr.options.scales.y.max = Math.max(metaDiaFixa, vHoje);
-            cr.update();
-
-            // STATUS BOX
-            const st = document.getElementById('riskStatus');
-            if (percDia >= 100) {
-                st.style.background = 'var(--brand-green)'; st.style.color = '#000'; st.innerText = 'OBJETIVO DIÁRIO CONCLUÍDO';
-            } else if (percDia < tProg - 10) {
-                st.style.background = '#ff0044'; st.style.color = '#fff'; st.innerText = 'RITMO ABAIXO DO HORÁRIO';
-            } else {
-                st.style.background = 'var(--brand-blue)'; st.style.color = '#fff'; st.innerText = 'RITMO OPERACIONAL OK';
-            }
-
-        } catch (e) { console.error(e); }
-    }
-    window.onload = init;
-</script>
-</body>
-</html>
+            if(faltaHoje <= 0) {
+                labelFalta.innerHTML = 'EXCEDENTE: <span class="text-green">' + format(Math.abs
