@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-orange: #f26122; --brand-blue: #243776;
+            --brand-orange: #f26122; --brand-blue: #243776; --brand-green: #00ff88;
             --bg-disk: #020205; --text-primary: #fff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,38 +26,41 @@
 
         .section-glass { 
             background: rgba(36, 55, 118, 0.12);
-            border: 1px solid rgba(36, 55, 118, 0.5);
+            border: 1px solid rgba(36, 55, 118, 0.4);
             border-radius: 20px; backdrop-filter: blur(15px);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transition: all 0.5s ease;
         }
 
         .section-global { padding: 4vh; height: 38vh; display: flex; align-items: center; justify-content: space-between; }
         .label-tech { font-family: 'Orbitron'; font-size: 1.2vh; color: var(--brand-blue); letter-spacing: 3px; margin-bottom: 0.5vh; font-weight: 900; }
-        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.5); line-height: 1; }
+        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.5); line-height: 1; transition: color 0.5s; }
 
         .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 20vh; }
-        .card-mid { padding: 2.5vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; }
-        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; line-height: 1.1; }
+        .card-mid { padding: 2.5vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; line-height: 1.1; transition: color 0.5s; }
         .sub-val { font-family: 'Rajdhani'; font-size: 2vh; font-weight: 700; margin-top: 0.5vh; }
 
         .section-risk { flex: 1; padding: 2vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; }
+        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; transition: all 0.3s; }
         
         .chart-box { flex: 1; width: 104%; margin-left: -2%; margin-bottom: -2vh; }
+        
+        .success-text { color: var(--brand-green) !important; text-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important; }
+        .success-border { border-left-color: var(--brand-green) !important; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px;">NATURAL IMPORTS | REAL-TIME MONITOR</header>
+    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px;">NATURAL IMPORTS | PERFORMANCE COMMAND</header>
 
-    <section class="section-glass section-global">
+    <section class="section-glass section-global" id="glass-global">
         <div>
             <p class="label-tech">META GLOBAL DO MÊS</p>
             <div id="disp-meta-global" class="val-main">R$ 0</div>
             <div style="display:flex; gap:5vh; margin-top:2vh; font-family:'Orbitron'; font-size:1.8vh;">
-                <p style="color:var(--brand-blue)">ACUMULADO TOTAL <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
-                <p style="color:var(--brand-blue)">FALTA PRO GERAL <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">TOTAL ACUMULADO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">FALTA GERAL <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
         <div style="width: 28vh; height: 28vh; position: relative; display: flex; align-items: center; justify-content: center;">
@@ -68,20 +71,20 @@
 
     <section class="grid-mid">
         <div class="section-glass card-mid">
-            <p class="label-tech">META DIÁRIA (RECALCULADA)</p>
+            <p class="label-tech">META DO DIA (FIXA)</p>
             <div id="disp-meta-dia" class="val-mid">R$ 0</div>
-            <div class="sub-val" style="color: var(--text-secondary)">RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
+            <div class="sub-val" style="color: var(--text-secondary)" id="label-restante">RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
         </div>
         
-        <div class="section-glass card-mid" style="border-left-color: var(--brand-orange);">
-            <p class="label-tech">VENDIDO AGORA (HOJE)</p>
+        <div class="section-glass card-mid" id="card-venda-dia">
+            <p class="label-tech">VENDIDO HOJE</p>
             <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange)">R$ 0</div>
             <div class="sub-val" style="color: var(--text-secondary)">ATINGIMENTO: <span id="perc-dia-label" style="color: var(--brand-orange)">0%</span></div>
         </div>
     </section>
 
     <section class="section-glass section-risk">
-        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">RITMO DE VENDAS VS HORÁRIO LIMITE (18:18)</p>
+        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">RITMO DE VENDAS VS HORÁRIO (FINAL: 18:18)</p>
         <div id="riskStatus">...</div>
         <div class="chart-box">
             <canvas id="chartR"></canvas>
@@ -95,6 +98,7 @@
 
     let cg, cr;
     let lastV = {};
+    let metaDiaFixa = null; // Variável para travar a meta do dia
 
     const format = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
@@ -109,7 +113,6 @@
         return remaining || 1;
     }
 
-    // Calcula a porcentagem do tempo comercial decorrido (08:00 às 18:18)
     function getTimeProgress() {
         const now = new Date();
         const start = new Date().setHours(8, 0, 0, 0);
@@ -166,54 +169,69 @@
 
             const vHoje = row[1] ? (row[1].v || 0) : 0; 
             const mGlob = row[2] ? (row[2].v || 0) : 0; 
-            const vMesPlanilha = row[4] ? (row[4].v || 0) : 0; 
+            const vMesBase = row[4] ? (row[4].v || 0) : 0; 
 
-            // LOGICA PEDIDA: Acumulado Real = Vendido Mês + Vendido Hoje
-            const vAcumuladoReal = vMesPlanilha + vHoje;
-            const gapGeralReal = Math.max(0, mGlob - vAcumuladoReal);
+            const vTotalRealTime = vMesBase + vHoje;
+            const gapMês = Math.max(0, mGlob - vTotalRealTime);
             
-            const diasUteis = getBusinessDaysRemaining();
-            const mDiaNec = gapGeralReal / diasUteis;
-            const faltaDia = Math.max(0, mDiaNec - vHoje);
-            
-            const percGlob = (vAcumuladoReal / (mGlob || 1)) * 100;
-            const percDiaVenda = (vHoje / (mDiaNec || 1)) * 100;
-            const percTempo = getTimeProgress();
+            // CÁLCULO DA META FIXA (SÓ RODA UMA VEZ)
+            if (metaDiaFixa === null) {
+                const diasRestantes = getBusinessDaysRemaining();
+                const gapInicial = Math.max(0, mGlob - vMesBase);
+                metaDiaFixa = gapInicial / diasRestantes;
+            }
 
-            // Animações
+            const faltaHoje = metaDiaFixa - vHoje;
+            const percGlobal = (vTotalRealTime / (mGlob || 1)) * 100;
+            const percDia = (vHoje / (metaDiaFixa || 1)) * 100;
+            const tProg = getTimeProgress();
+
+            // ANIMAÇÕES E VALORES
             animate('disp-meta-global', mGlob);
-            animate('disp-vendido-mes', vAcumuladoReal);
-            animate('disp-gap-global', gapGeralReal);
-            animate('disp-meta-dia', mDiaNec);
+            animate('disp-vendido-mes', vTotalRealTime);
+            animate('disp-gap-global', gapMês);
+            animate('disp-meta-dia', metaDiaFixa);
             animate('disp-vendido-dia', vHoje);
-            animate('disp-falta-dia', faltaDia);
             
-            document.getElementById('perc-dia-label').innerText = Math.floor(percDiaVenda) + '%';
-            document.getElementById('percG').innerText = Math.floor(percGlob) + '%';
+            // LÓGICA DE EXCEDENTE VS FALTA
+            const dispFalta = document.getElementById('disp-falta-dia');
+            const labelRestante = document.getElementById('label-restante');
+            if (faltaHoje <= 0) {
+                labelRestante.innerHTML = 'EXCEDENTE: <span id="disp-falta-dia" style="color: var(--brand-green)">' + format(Math.abs(faltaHoje)) + '</span>';
+            } else {
+                labelRestante.innerHTML = 'RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">' + format(faltaHoje) + '</span>';
+            }
 
-            // Gráfico Global
-            cg.data.datasets[0].data = [percGlob, 100 - percGlob];
+            document.getElementById('perc-dia-label').innerText = Math.floor(percDia) + '%';
+            document.getElementById('percG').innerText = Math.floor(percGlobal) + '%';
+
+            // ESTILIZAÇÃO VERDE SE POSITIVO
+            const cardDia = document.getElementById('card-venda-dia');
+            const valDia = document.getElementById('disp-vendido-dia');
+            if (percDia >= 100) {
+                cardDia.classList.add('success-border');
+                valDia.classList.add('success-text');
+                document.getElementById('perc-dia-label').classList.add('success-text');
+            }
+
+            // GRÁFICOS
+            cg.data.datasets[0].data = [percGlobal, 100 - percGlobal];
+            cg.data.datasets[0].backgroundColor[0] = percGlobal >= (tProg * (mGlob/mGlob)) ? '#00ff88' : '#f26122';
             cg.update();
 
-            // Gráfico de Risco por Horário
-            // A linha laranja segue o progresso da venda, mas o gráfico é balizado pelo tempo
             cr.data.datasets[0].data = [0, null, null, null, vHoje];
-            cr.data.datasets[1].data = [0, mDiaNec*0.25, mDiaNec*0.5, mDiaNec*0.75, mDiaNec]; // Linha pontilhada da meta
-            cr.options.scales.y.max = Math.max(mDiaNec, vHoje);
+            cr.data.datasets[0].borderColor = percDia >= tProg ? '#00ff88' : '#f26122';
+            cr.options.scales.y.max = Math.max(metaDiaFixa, vHoje);
             cr.update();
 
-            // Status de Risco baseado no Horário
+            // STATUS BOX
             const st = document.getElementById('riskStatus');
-            // Se a % de venda for menor que a % do tempo decorrido, o risco aumenta
-            if(percDiaVenda < percTempo - 10) { 
-                st.style.background = '#ff0044'; st.innerText = 'RITMO: ABAIXO DO HORÁRIO'; 
-                st.style.boxShadow = "0 0 20px #ff0044";
-            } else if(percDiaVenda >= 100) {
-                st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META DO DIA BATIDA';
-                st.style.boxShadow = "0 0 20px #00ff88";
+            if (percDia >= 100) {
+                st.style.background = 'var(--brand-green)'; st.style.color = '#000'; st.innerText = 'OBJETIVO DIÁRIO CONCLUÍDO';
+            } else if (percDia < tProg - 10) {
+                st.style.background = '#ff0044'; st.style.color = '#fff'; st.innerText = 'RITMO ABAIXO DO HORÁRIO';
             } else {
-                st.style.background = '#f26122'; st.innerText = 'RITMO: DENTRO DO ESPERADO';
-                st.style.boxShadow = "0 0 20px #f26122";
+                st.style.background = 'var(--brand-blue)'; st.style.color = '#fff'; st.innerText = 'RITMO OPERACIONAL OK';
             }
 
         } catch (e) { console.error(e); }
