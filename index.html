@@ -3,104 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NATURAL IMPORTS | COMMAND CENTER</title>
+    <title>COMMAND CENTER | NATURAL IMPORTS</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-orange: #f26122; --brand-orange-glow: rgba(242, 97, 34, 0.5);
-            --brand-blue: #243776; --brand-blue-glow: rgba(36, 55, 118, 0.8);
-            --bg-disk: #020204; --text-primary: #fff; --text-secondary: #8b9bb4;
+            --brand-orange: #f26122; --brand-blue: #243776;
+            --bg-disk: #020205; --text-primary: #fff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body { 
-            background-color: var(--bg-disk);
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(36, 55, 118, 0.15) 0%, transparent 70%);
+            background: var(--bg-disk);
             color: var(--text-primary); 
             font-family: 'Rajdhani', sans-serif; 
-            overflow: hidden; height: 100vh; 
+            height: 100vh; overflow: hidden;
             display: flex; align-items: center; justify-content: center; padding: 1.5vh;
-            animation: bgPulse 8s infinite alternate ease-in-out;
+            /* Vibração de fundo sutil */
+            background-image: radial-gradient(circle at 50% 50%, #0a0e1f 0%, #020205 100%);
+            animation: pulseBg 10s infinite alternate;
         }
-        @keyframes bgPulse { 
-            0% { background-color: #020204; } 
-            100% { background-color: #05070f; } 
-        }
+        @keyframes pulseBg { from { opacity: 0.8; } to { opacity: 1; } }
 
-        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; }
+        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; }
 
-        /* Meta Global */
-        .global-section { 
-            background: rgba(10, 11, 25, 0.4);
+        /* Meta Global - Estilo Glass */
+        .section-global { 
+            background: rgba(36, 55, 118, 0.1);
             border: 1px solid var(--brand-blue);
             border-radius: 20px; padding: 4vh; height: 38vh;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: inset 0 0 30px rgba(36, 55, 118, 0.2), 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(36, 55, 118, 0.2);
         }
-        .global-value { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 20px var(--brand-orange-glow); }
-        .global-chart-container { width: 30vh; height: 30vh; position: relative; display: flex; align-items: center; justify-content: center; }
-        #percCenter { position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; color: var(--brand-orange); }
+        .label-tech { font-family: 'Orbitron'; font-size: 1.3vh; color: var(--brand-blue); letter-spacing: 3px; margin-bottom: 1vh; }
+        .val-main { font-family: 'Orbitron'; font-size: 9vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.6); line-height: 1; }
 
-        /* Cards Diários */
-        .daily-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
-        .card { 
-            background: rgba(36, 55, 118, 0.08);
-            border-radius: 15px; padding: 2.5vh;
-            border: 1px solid rgba(36, 55, 118, 0.3);
-            backdrop-filter: blur(10px);
+        /* Grid Central */
+        .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
+        .card-mid { 
+            background: rgba(255, 255, 255, 0.03); 
+            border-radius: 15px; padding: 2vh; 
+            border-left: 4px solid var(--brand-blue);
             display: flex; flex-direction: column; justify-content: center;
         }
-        .card-value { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; }
+        .val-mid { font-family: 'Orbitron'; font-size: 5.5vh; font-weight: 900; }
 
-        /* Gráfico de Risco Inferior OTIMIZADO */
-        .risk-section { 
-            background: rgba(5, 7, 15, 0.6);
+        /* Seção de Risco - ALTO IMPACTO */
+        .section-risk { 
+            background: rgba(5, 7, 15, 0.8);
             flex: 1; border-radius: 20px; padding: 2vh;
-            border: 1px solid rgba(36, 55, 118, 0.5);
-            display: flex; flex-direction: column;
+            border: 1px solid rgba(36, 55, 118, 0.4);
+            display: flex; flex-direction: column; position: relative;
             overflow: hidden;
         }
-        .risk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; z-index: 2; }
-        #statusLabel { padding: 0.6vh 2.5vh; border-radius: 40px; font-family: 'Orbitron'; font-size: 1.2vh; font-weight: bold; letter-spacing: 1px; }
+        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; }
         
-        .chart-container { flex: 1; position: relative; width: 105%; margin-left: -2.5%; } /* Força a linha a sair da borda */
+        .chart-box { flex: 1; width: 102%; margin-left: -1%; margin-bottom: -1vh; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; height: 2vh; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:6px; opacity: 0.8;">NATURAL IMPORTS | COMMAND CENTER</header>
+    <header style="text-align:center; font-family:'Orbitron'; font-size:1vh; color:var(--brand-blue); letter-spacing:8px; margin-bottom: -1vh;">STRATEGIC COMMAND CENTER</header>
 
-    <section class="global-section">
+    <section class="section-global">
         <div>
-            <p style="color:var(--text-secondary); font-family:'Orbitron'; font-size:1.4vh; letter-spacing:2px;">PROGRESSO GLOBAL</p>
-            <div id="val-global-meta" class="global-value">R$ 0</div>
-            <div style="display:flex; gap:4vh; font-size:1.8vh; margin-top:1.5vh; font-family:'Orbitron'">
-                <p style="color:var(--brand-blue)">REAL <span id="val-global-vendido" style="color:#fff">R$ 0</span></p>
-                <p style="color:var(--brand-blue)">GAP <span id="val-global-falta" style="color:var(--brand-orange)">R$ 0</span></p>
+            <p class="label-tech">OBJETIVO GLOBAL DO MÊS</p>
+            <div id="disp-meta-global" class="val-main">R$ 0</div>
+            <div style="display:flex; gap:5vh; margin-top:2vh; font-family:'Orbitron'; font-size:1.8vh;">
+                <p style="color:var(--brand-blue)">PROCESSO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">RESTANTE <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
-        <div class="global-chart-container">
-            <canvas id="chartGlobal"></canvas>
-            <div id="percCenter">0%</div>
+        <div style="width: 30vh; height: 30vh; position: relative; display: flex; align-items: center; justify-content: center;">
+            <canvas id="chartG"></canvas>
+            <div id="percG" style="position: absolute; font-family: 'Orbitron'; font-size: 6vh; color: var(--brand-orange);">0%</div>
         </div>
     </section>
 
-    <section class="daily-grid">
-        <div class="card" style="border-top: 2px solid var(--brand-blue);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">OBJETIVO HOJE</p><div id="val-dia-meta" class="card-value">R$ 0</div></div>
-        <div class="card" style="border-top: 2px solid var(--brand-orange);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">VENDIDO AGORA</p><div id="val-dia-vendido" class="card-value" style="color:var(--brand-orange); text-shadow:0 0 15px var(--brand-orange-glow)">R$ 0</div></div>
+    <section class="grid-mid">
+        <div class="card-mid">
+            <p class="label-tech" style="color:#8b9bb4">META DIÁRIA NECESSÁRIA</p>
+            <div id="disp-meta-dia" class="val-mid">R$ 0</div>
+        </div>
+        <div class="card-mid" style="border-left-color: var(--brand-orange);">
+            <p class="label-tech" style="color:#8b9bb4">VENDIDO HOJE</p>
+            <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange); text-shadow: 0 0 15px rgba(242, 97, 34, 0.4);">R$ 0</div>
+        </div>
     </section>
 
-    <section class="risk-section">
-        <div class="risk-header">
-            <p style="font-family:'Orbitron'; font-size:1.2vh; color:var(--text-secondary); letter-spacing:1px;">CURVA DE ATINGIMENTO DA META DIÁRIA</p>
-            <div id="statusLabel">SINCRONIZANDO...</div>
-        </div>
-        <div class="chart-container">
-            <canvas id="chartRisk"></canvas>
+    <section class="section-risk">
+        <p class="label-tech" style="margin-left: 1vh;">RISCO DE ATINGIMENTO DA META DIÁRIA</p>
+        <div id="riskStatus">CALCULANDO...</div>
+        <div class="chart-box">
+            <canvas id="chartR"></canvas>
         </div>
     </section>
 </div>
@@ -109,63 +106,71 @@
     const SHEET_ID = '1jMprhV4a_-mc_p-0PRo3akIT_mJfWW7ATnxSQdwz2xM';
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    let chartG, chartR;
-    let lastValues = {}; 
+    let cg, cr;
+    let lastV = {};
 
-    const formatBRL = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
+    const format = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
-    function animateValue(id, target) {
-        const el = document.getElementById(id);
-        const start = lastValues[id] || 0;
+    function getBusinessDaysRemaining() {
+        const today = new Date();
+        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        let count = 0;
+        for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
+            const day = d.getDay();
+            if (day !== 0 && day !== 6) count++; // Ignora Sáb/Dom
+        }
+        return count || 1;
+    }
+
+    function animate(id, target) {
+        const start = lastV[id] || 0;
         if (start === target) return;
-        let startTime = null;
-        const duration = 2000; 
-        function step(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-            const current = Math.floor(progress * (target - start) + start);
-            el.innerText = formatBRL(current);
+        const el = document.getElementById(id);
+        let startT = null;
+        const dur = 1500;
+        function step(t) {
+            if (!startT) startT = t;
+            const progress = Math.min((t - startT) / dur, 1);
+            const curr = Math.floor(progress * (target - start) + start);
+            el.innerText = format(curr);
             if (progress < 1) requestAnimationFrame(step);
         }
-        lastValues[id] = target;
+        lastV[id] = target;
         requestAnimationFrame(step);
     }
 
     function init() {
-        chartG = new Chart(document.getElementById('chartGlobal'), {
+        cg = new Chart(document.getElementById('chartG'), {
             type: 'doughnut',
-            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', 'rgba(36, 55, 118, 0.15)'], borderWidth: 0 }] },
-            options: { cutout: '82%', plugins: { tooltip: { enabled: false } }, animation: { duration: 2500, easing: 'easeOutExpo' } }
+            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', '#121626'], borderWidth: 0 }] },
+            options: { cutout: '85%', plugins: { tooltip: false } }
         });
 
-        chartR = new Chart(document.getElementById('chartRisk'), {
+        cr = new Chart(document.getElementById('chartR'), {
             type: 'line',
             data: { 
-                labels: ['START', '', '', '', 'META'], 
-                datasets: [
-                    { 
-                        data: [0, null, null, null, null], 
-                        borderColor: '#f26122', borderWidth: 6, fill: true, 
-                        backgroundColor: 'rgba(242, 97, 34, 0.15)', tension: 0.4, pointRadius: 0 
+                labels: ['0%','','','','100%'], 
+                datasets: [{ 
+                    data: [0, 0, 0, 0, 0], 
+                    borderColor: '#f26122', borderWidth: 8, fill: true,
+                    backgroundColor: (ctx) => {
+                        const c = ctx.chart.ctx;
+                        const g = c.createLinearGradient(0, 0, 0, 400);
+                        g.addColorStop(0, 'rgba(242, 97, 34, 0.4)');
+                        g.addColorStop(1, 'rgba(36, 55, 118, 0)');
+                        return g;
                     },
-                    { 
-                        data: [0, 25, 50, 75, 100], 
-                        borderColor: 'rgba(36, 55, 118, 0.4)', borderDash: [10,10], borderWidth: 1, fill: false, pointRadius: 0 
-                    }
-                ]
+                    tension: 0.4, pointRadius: 0
+                }]
             },
             options: { 
                 responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    y: { display: false, min: 0 }, 
-                    x: { grid: { display: false }, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } 
-                },
-                plugins: { legend: { enabled: false } },
-                animation: { duration: 3000, easing: 'easeOutQuart' }
+                scales: { y: { display: false, min: 0 }, x: { grid: false, ticks: { color: '#243776', font: { family: 'Orbitron' } } } },
+                plugins: { legend: false }
             }
         });
         update();
-        setInterval(update, 45000);
+        setInterval(update, 30000);
     }
 
     async function update() {
@@ -173,43 +178,40 @@
             const res = await fetch(GVIZ_URL);
             const text = await res.text();
             const json = JSON.parse(text.substring(47, text.length - 2));
-            const rows = json.table.rows;
+            const lastRow = json.table.rows[json.table.rows.length - 1].c;
 
-            let tV = 0, tM = 0;
-            rows.forEach(r => {
-                tV += r.c[1] ? r.c[1].v : 0;
-                tM += r.c[2] ? r.c[2].v : 0;
-            });
+            const vDia = lastRow[1].v; // Col B
+            const metaGlobal = lastRow[2].v; // Col C
+            const vTotalMes = lastRow[4].v; // Col E
 
-            const lastRow = rows[rows.length - 1];
-            const vH = lastRow.c[1].v;
-            const mH = lastRow.c[2].v;
-            const pG = (tV / tM) * 100;
-            const pD = (vH / mH) * 100;
+            const gapGlobal = Math.max(0, metaGlobal - vTotalMes);
+            const diasRestantes = getBusinessDaysRemaining();
+            const metaDiaNec = gapGlobal / diasRestantes;
+            
+            const percGlobal = (vTotalMes / metaGlobal) * 100;
+            const percDia = (vDia / metaDiaNec) * 100;
 
-            animateValue('val-global-meta', tM);
-            animateValue('val-global-vendido', tV);
-            animateValue('val-global-falta', Math.max(0, tM - tV));
-            animateValue('val-dia-meta', mH);
-            animateValue('val-dia-vendido', vH);
-            document.getElementById('percCenter').innerText = pG.toFixed(0) + '%';
+            // UI
+            animate('disp-meta-global', metaGlobal);
+            animate('disp-vendido-mes', vTotalMes);
+            animate('disp-gap-global', gapGlobal);
+            animate('disp-meta-dia', metaDiaNec);
+            animate('disp-vendido-dia', vDia);
+            document.getElementById('percG').innerText = Math.floor(percGlobal) + '%';
 
-            chartG.data.datasets[0].data = [pG, 100 - pG];
-            chartG.update();
+            // Charts
+            cg.data.datasets[0].data = [percGlobal, 100 - percGlobal];
+            cg.update();
 
-            // Lógica do Gráfico de Risco: preenche a linha até a posição atual da meta
-            // Ex: Se vendeu 70% da meta, a linha laranja vai até o ponto 4 (quase o final)
-            const progressIndex = Math.min(Math.floor((pD / 100) * 4), 4);
-            let riskData = [0, null, null, null, null];
-            riskData[4] = vH; // Forçamos o ponto final ser o valor vendido atual
-            chartR.data.datasets[0].data = [0, null, null, null, vH]; 
-            chartR.options.scales.y.max = Math.max(mH, vH); 
-            chartR.update();
+            // Gráfico de Risco: Simula o caminho até a meta necessária
+            cr.data.datasets[0].data = [0, vDia/4, vDia/2, vDia/1.5, vDia];
+            cr.options.scales.y.max = Math.max(metaDiaNec, vDia);
+            cr.update();
 
-            const lb = document.getElementById('statusLabel');
-            if(pD < 50) { lb.style.background = '#ff0044'; lb.style.boxShadow = "0 0 15px #ff0044"; lb.innerText = 'RISCO CRÍTICO'; }
-            else if(pD < 95) { lb.style.background = '#f26122'; lb.style.boxShadow = "0 0 15px #f26122"; lb.innerText = 'RITMO OPERACIONAL'; }
-            else { lb.style.background = '#00ff88'; lb.style.color = '#000'; lb.style.boxShadow = "0 0 15px #00ff88"; lb.innerText = 'META ATINGIDA'; }
+            const st = document.getElementById('riskStatus');
+            if(percDia < 40) { st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; }
+            else if(percDia < 100) { st.style.background = '#f26122'; st.innerText = 'RISCO: MÉDIO'; }
+            else { st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META BATIDA'; }
 
         } catch (e) { console.error(e); }
     }
