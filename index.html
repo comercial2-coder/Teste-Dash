@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMMAND CENTER | NATURAL IMPORTS</title>
+    <title>NATURAL IMPORTS | COMMAND CENTER</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
@@ -19,83 +19,69 @@
             font-family: 'Rajdhani', sans-serif; 
             height: 100vh; overflow: hidden;
             display: flex; align-items: center; justify-content: center; padding: 1.5vh;
-            /* Vibração de fundo sutil */
             background-image: radial-gradient(circle at 50% 50%, #0a0e1f 0%, #020205 100%);
-            animation: pulseBg 10s infinite alternate;
+            animation: pulseBg 8s infinite alternate ease-in-out;
         }
-        @keyframes pulseBg { from { opacity: 0.8; } to { opacity: 1; } }
+        @keyframes pulseBg { from { opacity: 0.9; transform: scale(1); } to { opacity: 1; transform: scale(1.02); } }
 
-        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; }
+        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; z-index: 10; }
 
-        /* Meta Global - Estilo Glass */
-        .section-global { 
-            background: rgba(36, 55, 118, 0.1);
+        /* Estilo dos Seções com Azul Predominante */
+        .section-glass { 
+            background: rgba(36, 55, 118, 0.15);
             border: 1px solid var(--brand-blue);
-            border-radius: 20px; padding: 4vh; height: 38vh;
-            display: flex; align-items: center; justify-content: space-between;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(36, 55, 118, 0.2);
+            border-radius: 20px; backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(36, 55, 118, 0.3);
         }
-        .label-tech { font-family: 'Orbitron'; font-size: 1.3vh; color: var(--brand-blue); letter-spacing: 3px; margin-bottom: 1vh; }
-        .val-main { font-family: 'Orbitron'; font-size: 9vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.6); line-height: 1; }
 
-        /* Grid Central */
+        .section-global { padding: 4vh; height: 38vh; display: flex; align-items: center; justify-content: space-between; }
+        .label-tech { font-family: 'Orbitron'; font-size: 1.2vh; color: var(--brand-blue); letter-spacing: 4px; margin-bottom: 1vh; font-weight: 900; }
+        .val-main { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 25px rgba(242, 97, 34, 0.6); line-height: 1; }
+
         .grid-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
-        .card-mid { 
-            background: rgba(255, 255, 255, 0.03); 
-            border-radius: 15px; padding: 2vh; 
-            border-left: 4px solid var(--brand-blue);
-            display: flex; flex-direction: column; justify-content: center;
-        }
-        .val-mid { font-family: 'Orbitron'; font-size: 5.5vh; font-weight: 900; }
+        .card-mid { padding: 2vh; border-left: 5px solid var(--brand-blue); display: flex; flex-direction: column; justify-content: center; }
+        .val-mid { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; }
 
-        /* Seção de Risco - ALTO IMPACTO */
-        .section-risk { 
-            background: rgba(5, 7, 15, 0.8);
-            flex: 1; border-radius: 20px; padding: 2vh;
-            border: 1px solid rgba(36, 55, 118, 0.4);
-            display: flex; flex-direction: column; position: relative;
-            overflow: hidden;
-        }
-        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; }
+        .section-risk { flex: 1; padding: 2vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        #riskStatus { position: absolute; top: 2vh; right: 2vh; padding: 0.8vh 3vh; border-radius: 50px; font-family: 'Orbitron'; font-size: 1.2vh; z-index: 10; font-weight: 900; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         
-        .chart-box { flex: 1; width: 102%; margin-left: -1%; margin-bottom: -1vh; }
+        .chart-box { flex: 1; width: 104%; margin-left: -2%; margin-bottom: -2vh; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; font-family:'Orbitron'; font-size:1vh; color:var(--brand-blue); letter-spacing:8px; margin-bottom: -1vh;">STRATEGIC COMMAND CENTER</header>
+    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px; margin-bottom: -1vh; opacity: 0.7;">NATURAL IMPORTS OPERATIONS</header>
 
-    <section class="section-global">
+    <section class="section-glass section-global">
         <div>
-            <p class="label-tech">OBJETIVO GLOBAL DO MÊS</p>
+            <p class="label-tech">META GLOBAL DO MÊS</p>
             <div id="disp-meta-global" class="val-main">R$ 0</div>
             <div style="display:flex; gap:5vh; margin-top:2vh; font-family:'Orbitron'; font-size:1.8vh;">
-                <p style="color:var(--brand-blue)">PROCESSO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
-                <p style="color:var(--brand-blue)">RESTANTE <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">ACUMULADO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">FALTA <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
-        <div style="width: 30vh; height: 30vh; position: relative; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 28vh; height: 28vh; position: relative; display: flex; align-items: center; justify-content: center;">
             <canvas id="chartG"></canvas>
-            <div id="percG" style="position: absolute; font-family: 'Orbitron'; font-size: 6vh; color: var(--brand-orange);">0%</div>
+            <div id="percG" style="position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; color: var(--brand-orange); text-shadow: 0 0 10px rgba(242,97,34,0.3);">0%</div>
         </div>
     </section>
 
     <section class="grid-mid">
-        <div class="card-mid">
-            <p class="label-tech" style="color:#8b9bb4">META DIÁRIA NECESSÁRIA</p>
+        <div class="section-glass card-mid">
+            <p class="label-tech" style="color:rgba(255,255,255,0.4)">META DIÁRIA (PROJEÇÃO)</p>
             <div id="disp-meta-dia" class="val-mid">R$ 0</div>
         </div>
-        <div class="card-mid" style="border-left-color: var(--brand-orange);">
-            <p class="label-tech" style="color:#8b9bb4">VENDIDO HOJE</p>
+        <div class="section-glass card-mid" style="border-left-color: var(--brand-orange);">
+            <p class="label-tech" style="color:rgba(255,255,255,0.4)">VENDIDO HOJE</p>
             <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange); text-shadow: 0 0 15px rgba(242, 97, 34, 0.4);">R$ 0</div>
         </div>
     </section>
 
-    <section class="section-risk">
-        <p class="label-tech" style="margin-left: 1vh;">RISCO DE ATINGIMENTO DA META DIÁRIA</p>
-        <div id="riskStatus">CALCULANDO...</div>
+    <section class="section-glass section-risk">
+        <p class="label-tech" style="margin-left: 1vh; color: rgba(255,255,255,0.5)">CURVA DE RISCO DIÁRIO</p>
+        <div id="riskStatus">SINCRONIZANDO...</div>
         <div class="chart-box">
             <canvas id="chartR"></canvas>
         </div>
@@ -117,14 +103,14 @@
         let count = 0;
         for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
             const day = d.getDay();
-            if (day !== 0 && day !== 6) count++; // Ignora Sáb/Dom
+            if (day !== 0 && day !== 6) count++; 
         }
         return count || 1;
     }
 
     function animate(id, target) {
+        target = parseFloat(target) || 0;
         const start = lastV[id] || 0;
-        if (start === target) return;
         const el = document.getElementById(id);
         let startT = null;
         const dur = 1500;
@@ -142,21 +128,21 @@
     function init() {
         cg = new Chart(document.getElementById('chartG'), {
             type: 'doughnut',
-            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', '#121626'], borderWidth: 0 }] },
-            options: { cutout: '85%', plugins: { tooltip: false } }
+            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', 'rgba(36, 55, 118, 0.2)'], borderWidth: 0 }] },
+            options: { cutout: '82%', plugins: { tooltip: false }, animation: { duration: 2000 } }
         });
 
         cr = new Chart(document.getElementById('chartR'), {
             type: 'line',
             data: { 
-                labels: ['0%','','','','100%'], 
+                labels: ['0%','25%','50%','75%','100%'], 
                 datasets: [{ 
                     data: [0, 0, 0, 0, 0], 
                     borderColor: '#f26122', borderWidth: 8, fill: true,
                     backgroundColor: (ctx) => {
                         const c = ctx.chart.ctx;
-                        const g = c.createLinearGradient(0, 0, 0, 400);
-                        g.addColorStop(0, 'rgba(242, 97, 34, 0.4)');
+                        const g = c.createLinearGradient(0, 0, 0, 300);
+                        g.addColorStop(0, 'rgba(242, 97, 34, 0.3)');
                         g.addColorStop(1, 'rgba(36, 55, 118, 0)');
                         return g;
                     },
@@ -165,7 +151,7 @@
             },
             options: { 
                 responsive: true, maintainAspectRatio: false,
-                scales: { y: { display: false, min: 0 }, x: { grid: false, ticks: { color: '#243776', font: { family: 'Orbitron' } } } },
+                scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } },
                 plugins: { legend: false }
             }
         });
@@ -178,20 +164,23 @@
             const res = await fetch(GVIZ_URL);
             const text = await res.text();
             const json = JSON.parse(text.substring(47, text.length - 2));
-            const lastRow = json.table.rows[json.table.rows.length - 1].c;
+            const rows = json.table.rows;
+            
+            // Pega a última linha válida que contenha dados
+            const lastDataRow = rows[rows.length - 1].c;
 
-            const vDia = lastRow[1].v; // Col B
-            const metaGlobal = lastRow[2].v; // Col C
-            const vTotalMes = lastRow[4].v; // Col E
+            const vDia = lastDataRow[1] ? (lastDataRow[1].v || 0) : 0; // Col B
+            const metaGlobal = lastDataRow[2] ? (lastDataRow[2].v || 0) : 0; // Col C
+            const vTotalMes = lastDataRow[4] ? (lastDataRow[4].v || 0) : 0; // Col E
 
             const gapGlobal = Math.max(0, metaGlobal - vTotalMes);
             const diasRestantes = getBusinessDaysRemaining();
             const metaDiaNec = gapGlobal / diasRestantes;
             
-            const percGlobal = (vTotalMes / metaGlobal) * 100;
-            const percDia = (vDia / metaDiaNec) * 100;
+            const percGlobal = (vTotalMes / (metaGlobal || 1)) * 100;
+            const percDia = (vDia / (metaDiaNec || 1)) * 100;
 
-            // UI
+            // UI com Animação
             animate('disp-meta-global', metaGlobal);
             animate('disp-vendido-mes', vTotalMes);
             animate('disp-gap-global', gapGlobal);
@@ -203,17 +192,26 @@
             cg.data.datasets[0].data = [percGlobal, 100 - percGlobal];
             cg.update();
 
-            // Gráfico de Risco: Simula o caminho até a meta necessária
-            cr.data.datasets[0].data = [0, vDia/4, vDia/2, vDia/1.5, vDia];
+            // Gráfico de Risco: Mostra a curva do dia
+            cr.data.datasets[0].data = [0, vDia*0.3, vDia*0.6, vDia*0.8, vDia];
             cr.options.scales.y.max = Math.max(metaDiaNec, vDia);
             cr.update();
 
             const st = document.getElementById('riskStatus');
-            if(percDia < 40) { st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; }
-            else if(percDia < 100) { st.style.background = '#f26122'; st.innerText = 'RISCO: MÉDIO'; }
-            else { st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META BATIDA'; }
+            if(percDia < 50) { 
+                st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; 
+                st.style.boxShadow = "0 0 20px #ff0044";
+            } else if(percDia < 100) { 
+                st.style.background = '#f26122'; st.innerText = 'RISCO: MÉDIO'; 
+                st.style.boxShadow = "0 0 20px #f26122";
+            } else { 
+                st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META ATINGIDA'; 
+                st.style.boxShadow = "0 0 20px #00ff88";
+            }
 
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error("Erro na leitura:", e); 
+        }
     }
     window.onload = init;
 </script>
