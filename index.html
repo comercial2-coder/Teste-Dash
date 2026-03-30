@@ -20,9 +20,7 @@
             height: 100vh; overflow: hidden;
             display: flex; align-items: center; justify-content: center; padding: 1.5vh;
             background-image: radial-gradient(circle at 50% 50%, #0a0e1f 0%, #020205 100%);
-            animation: pulseBg 8s infinite alternate ease-in-out;
         }
-        @keyframes pulseBg { from { opacity: 0.9; } to { opacity: 1; } }
 
         .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; z-index: 10; }
 
@@ -51,15 +49,15 @@
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px; margin-bottom: -1vh;">NATURAL IMPORTS | PERFORMANCE</header>
+    <header style="text-align:center; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:10px;">NATURAL IMPORTS | REAL-TIME MONITOR</header>
 
     <section class="section-glass section-global">
         <div>
             <p class="label-tech">META GLOBAL DO MÊS</p>
             <div id="disp-meta-global" class="val-main">R$ 0</div>
             <div style="display:flex; gap:5vh; margin-top:2vh; font-family:'Orbitron'; font-size:1.8vh;">
-                <p style="color:var(--brand-blue)">ACUMULADO <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
-                <p style="color:var(--brand-blue)">FALTA <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">ACUMULADO TOTAL <span id="disp-vendido-mes" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">FALTA PRO GERAL <span id="disp-gap-global" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
         <div style="width: 28vh; height: 28vh; position: relative; display: flex; align-items: center; justify-content: center;">
@@ -70,20 +68,20 @@
 
     <section class="grid-mid">
         <div class="section-glass card-mid">
-            <p class="label-tech">META DIÁRIA NECESSÁRIA</p>
+            <p class="label-tech">META DIÁRIA (RECALCULADA)</p>
             <div id="disp-meta-dia" class="val-mid">R$ 0</div>
-            <div class="sub-val" style="color: var(--text-secondary)">FALTA: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
+            <div class="sub-val" style="color: var(--text-secondary)">RESTANTE HOJE: <span id="disp-falta-dia" style="color: #fff">R$ 0</span></div>
         </div>
         
         <div class="section-glass card-mid" style="border-left-color: var(--brand-orange);">
-            <p class="label-tech">VENDIDO HOJE</p>
+            <p class="label-tech">VENDIDO AGORA (HOJE)</p>
             <div id="disp-vendido-dia" class="val-mid" style="color:var(--brand-orange)">R$ 0</div>
-            <div class="sub-val" style="color: var(--text-secondary)">ATINGIDO: <span id="perc-dia-label" style="color: var(--brand-orange)">0%</span></div>
+            <div class="sub-val" style="color: var(--text-secondary)">ATINGIMENTO: <span id="perc-dia-label" style="color: var(--brand-orange)">0%</span></div>
         </div>
     </section>
 
     <section class="section-glass section-risk">
-        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">CURVA DE RISCO (REALIZADO VS PROJEÇÃO)</p>
+        <p class="label-tech" style="margin-left: 1vh; opacity: 0.5;">RITMO DE VENDAS VS HORÁRIO LIMITE (18:18)</p>
         <div id="riskStatus">...</div>
         <div class="chart-box">
             <canvas id="chartR"></canvas>
@@ -100,12 +98,10 @@
 
     const format = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
-    // CÁLCULO REAL DE DIAS ÚTEIS (Seg-Sex)
     function getBusinessDaysRemaining() {
         const date = new Date();
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         let remaining = 0;
-        
         for (let i = date.getDate(); i <= lastDay; i++) {
             const day = new Date(date.getFullYear(), date.getMonth(), i).getDay();
             if (day !== 0 && day !== 6) remaining++;
@@ -113,15 +109,24 @@
         return remaining || 1;
     }
 
+    // Calcula a porcentagem do tempo comercial decorrido (08:00 às 18:18)
+    function getTimeProgress() {
+        const now = new Date();
+        const start = new Date().setHours(8, 0, 0, 0);
+        const end = new Date().setHours(18, 18, 0, 0);
+        if (now < start) return 0;
+        if (now > end) return 100;
+        return ((now - start) / (end - start)) * 100;
+    }
+
     function animate(id, target) {
         target = parseFloat(target) || 0;
         const start = lastV[id] || 0;
         const el = document.getElementById(id);
         let startT = null;
-        const dur = 1500;
         function step(t) {
             if (!startT) startT = t;
-            const prog = Math.min((t - startT) / dur, 1);
+            const prog = Math.min((t - startT) / 1500, 1);
             const curr = Math.floor(prog * (target - start) + start);
             el.innerText = format(curr);
             if (prog < 1) requestAnimationFrame(step);
@@ -140,18 +145,11 @@
         cr = new Chart(document.getElementById('chartR'), {
             type: 'line',
             data: { 
-                labels: ['START', '25%', '50%', '75%', 'META'], 
-                datasets: [{ 
-                    data: [0, 0, 0, 0, 0], 
-                    borderColor: '#f26122', borderWidth: 8, fill: true,
-                    backgroundColor: (ctx) => {
-                        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
-                        g.addColorStop(0, 'rgba(242, 97, 34, 0.3)');
-                        g.addColorStop(1, 'rgba(36, 55, 118, 0)');
-                        return g;
-                    },
-                    tension: 0.4, pointRadius: 0
-                }]
+                labels: ['08:00', '10:30', '13:00', '15:30', '18:18'], 
+                datasets: [
+                    { label: 'Real', data: [0, 0, 0, 0, 0], borderColor: '#f26122', borderWidth: 8, fill: true, backgroundColor: 'rgba(242, 97, 34, 0.2)', tension: 0.4, pointRadius: 0 },
+                    { label: 'Esperado', data: [0, 25, 50, 75, 100], borderColor: 'rgba(36, 55, 118, 0.3)', borderDash: [5,5], borderWidth: 2, fill: false, pointRadius: 0 }
+                ]
             },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false, min: 0 }, x: { grid: {display: false}, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } }, plugins: { legend: false } }
         });
@@ -166,41 +164,57 @@
             const json = JSON.parse(text.substring(47, text.length - 2));
             const row = json.table.rows[json.table.rows.length - 1].c;
 
-            const vHoje = row[1] ? (row[1].v || 0) : 0; // Col B
-            const mGlob = row[2] ? (row[2].v || 0) : 0; // Col C
-            const vMes = row[4] ? (row[4].v || 0) : 0;  // Col E
+            const vHoje = row[1] ? (row[1].v || 0) : 0; 
+            const mGlob = row[2] ? (row[2].v || 0) : 0; 
+            const vMesPlanilha = row[4] ? (row[4].v || 0) : 0; 
 
-            const gapGlob = Math.max(0, mGlob - vMes);
+            // LOGICA PEDIDA: Acumulado Real = Vendido Mês + Vendido Hoje
+            const vAcumuladoReal = vMesPlanilha + vHoje;
+            const gapGeralReal = Math.max(0, mGlob - vAcumuladoReal);
+            
             const diasUteis = getBusinessDaysRemaining();
-            const mDiaNec = gapGlob / diasUteis;
+            const mDiaNec = gapGeralReal / diasUteis;
             const faltaDia = Math.max(0, mDiaNec - vHoje);
             
-            const percGlob = (vMes / (mGlob || 1)) * 100;
-            const percDia = (vHoje / (mDiaNec || 1)) * 100;
+            const percGlob = (vAcumuladoReal / (mGlob || 1)) * 100;
+            const percDiaVenda = (vHoje / (mDiaNec || 1)) * 100;
+            const percTempo = getTimeProgress();
 
-            // Update Valores
+            // Animações
             animate('disp-meta-global', mGlob);
-            animate('disp-vendido-mes', vMes);
-            animate('disp-gap-global', gapGlob);
+            animate('disp-vendido-mes', vAcumuladoReal);
+            animate('disp-gap-global', gapGeralReal);
             animate('disp-meta-dia', mDiaNec);
             animate('disp-vendido-dia', vHoje);
             animate('disp-falta-dia', faltaDia);
             
-            document.getElementById('perc-dia-label').innerText = Math.floor(percDia) + '%';
+            document.getElementById('perc-dia-label').innerText = Math.floor(percDiaVenda) + '%';
             document.getElementById('percG').innerText = Math.floor(percGlob) + '%';
 
-            // Gráficos
+            // Gráfico Global
             cg.data.datasets[0].data = [percGlob, 100 - percGlob];
             cg.update();
 
-            cr.data.datasets[0].data = [0, vHoje*0.4, vHoje*0.7, vHoje*0.9, vHoje];
+            // Gráfico de Risco por Horário
+            // A linha laranja segue o progresso da venda, mas o gráfico é balizado pelo tempo
+            cr.data.datasets[0].data = [0, null, null, null, vHoje];
+            cr.data.datasets[1].data = [0, mDiaNec*0.25, mDiaNec*0.5, mDiaNec*0.75, mDiaNec]; // Linha pontilhada da meta
             cr.options.scales.y.max = Math.max(mDiaNec, vHoje);
             cr.update();
 
+            // Status de Risco baseado no Horário
             const st = document.getElementById('riskStatus');
-            if(percDia < 50) { st.style.background = '#ff0044'; st.innerText = 'RISCO: CRÍTICO'; }
-            else if(percDia < 100) { st.style.background = '#f26122'; st.innerText = 'RITMO: REGULAR'; }
-            else { st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META BATIDA'; }
+            // Se a % de venda for menor que a % do tempo decorrido, o risco aumenta
+            if(percDiaVenda < percTempo - 10) { 
+                st.style.background = '#ff0044'; st.innerText = 'RITMO: ABAIXO DO HORÁRIO'; 
+                st.style.boxShadow = "0 0 20px #ff0044";
+            } else if(percDiaVenda >= 100) {
+                st.style.background = '#00ff88'; st.style.color='#000'; st.innerText = 'META DO DIA BATIDA';
+                st.style.boxShadow = "0 0 20px #00ff88";
+            } else {
+                st.style.background = '#f26122'; st.innerText = 'RITMO: DENTRO DO ESPERADO';
+                st.style.boxShadow = "0 0 20px #f26122";
+            }
 
         } catch (e) { console.error(e); }
     }
