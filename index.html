@@ -3,142 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NATURAL IMPORTS | Command Center</title>
+    <title>NATURAL IMPORTS | COMMAND CENTER</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-orange: #f26122; --brand-orange-glow: rgba(242, 97, 34, 0.4);
-            --brand-blue: #243776; --brand-blue-glow: rgba(36, 55, 118, 0.6);
+            --brand-orange: #f26122; --brand-blue: #243776;
             --bg-disk: #050509; --bg-card: #0a0b14;
             --text-primary: #fff; --text-secondary: #8b9bb4;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg-disk); color: var(--text-primary); font-family: 'Roboto', sans-serif; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5vh; }
-        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; }
-        .global-focus-section { background: var(--bg-card); border: 1px solid rgba(36, 55, 118, 0.3); border-radius: 16px; padding: 3vh; height: 38vh; display: flex; align-items: center; justify-content: space-between; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .global-value { font-family: 'Orbitron'; font-size: 8.5vh; font-weight: 900; color: var(--brand-orange); text-shadow: 0 0 15px var(--brand-orange-glow); line-height: 1; }
-        .global-chart-container { width: 30vh; height: 30vh; position: relative; display: flex; align-items: center; justify-content: center; }
-        #globalPercentageText { position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; font-weight: 700; color: var(--brand-orange); }
-        .daily-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vh; height: 16vh; }
-        .card { background: var(--bg-card); border-radius: 12px; padding: 2vh; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.02); }
-        .card-header { color: var(--text-secondary); font-family: 'Orbitron'; font-size: 1.3vh; letter-spacing: 1px; margin-bottom: 0.5vh; }
-        .card-value { font-family: 'Orbitron'; font-size: 4.5vh; font-weight: 700; }
-        .risk-section { background: var(--bg-card); flex: 1; border-radius: 16px; padding: 2vh; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.02); }
-        #alertBeacon { padding: 0.8vh 2vh; border-radius: 4px; font-family: 'Orbitron'; font-weight: 700; font-size: 1.4vh; text-transform: uppercase; transition: all 0.5s ease; }
+        body { background: var(--bg-disk); color: var(--text-primary); font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5vh; }
+        
+        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; opacity: 0; animation: fadeIn 2s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Meta Global - Efeito Glow */
+        .global-section { background: var(--bg-card); border: 1px solid rgba(242, 97, 34, 0.2); border-radius: 20px; padding: 4vh; height: 40vh; display: flex; align-items: center; justify-content: space-between; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .global-value { font-family: 'Orbitron'; font-size: 9vh; color: var(--brand-orange); text-shadow: 0 0 20px var(--brand-orange); margin: 1vh 0; }
+        
+        .global-chart-container { width: 32vh; height: 32vh; position: relative; display: flex; align-items: center; justify-content: center; }
+        #percCenter { position: absolute; font-family: 'Orbitron'; font-size: 6vh; color: var(--brand-orange); }
+
+        /* Cards Diários */
+        .daily-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
+        .card { background: var(--bg-card); border-radius: 15px; padding: 2.5vh; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center; }
+        .card-value { font-family: 'Orbitron'; font-size: 5vh; transition: all 0.5s; }
+
+        /* Gráfico de Risco Inferior */
+        .risk-section { background: var(--bg-card); flex: 1; border-radius: 20px; padding: 2vh; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; }
+        #alertBeacon { padding: 0.5vh 2vh; border-radius: 5px; font-family: 'Orbitron'; font-size: 1.5vh; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        
+        .chart-wrapper { flex: 1; position: relative; margin-top: 1vh; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; height: 3vh;"><h1 style="font-family:'Orbitron'; font-size:1.5vh; color:var(--text-secondary); letter-spacing:4px;">NATURAL IMPORTS | GLOBAL PERFORMANCE</h1></header>
+    <header style="text-align:center; height: 2vh; font-family:'Orbitron'; font-size:1.2vh; color:var(--text-secondary); letter-spacing:5px;">NATURAL IMPORTS | GLOBAL PERFORMANCE</header>
 
-    <section class="global-focus-section">
+    <section class="global-section">
         <div>
-            <p style="color:var(--text-secondary); font-family:'Orbitron'; font-size:1.5vh; margin-bottom:1vh;">META GLOBAL ACUMULADA</p>
-            <div id="metaGlobalValue" class="global-value">R$ 0</div>
-            <div style="display:flex; gap:3vh; margin-top:2vh; font-size:1.8vh; color:var(--text-secondary);">
-                <div>Vendido: <b id="globalVendido" style="color:white">R$ 0</b></div>
-                <div>Falta: <b id="globalRestante" style="color:white">R$ 0</b></div>
+            <p style="color:var(--text-secondary); font-family:'Orbitron'; font-size:1.5vh;">META GLOBAL ACUMULADA</p>
+            <div id="val-global-meta" class="global-value">R$ 0</div>
+            <div style="display:flex; gap:4vh; font-size:2vh; font-weight:bold;">
+                <p>Vendido: <span id="val-global-vendido" style="color:var(--brand-orange)">R$ 0</span></p>
+                <p>Falta: <span id="val-global-falta" style="color:#fff">R$ 0</span></p>
             </div>
         </div>
         <div class="global-chart-container">
-            <canvas id="globalDoughnutChart"></canvas>
-            <div id="globalPercentageText">0%</div>
+            <canvas id="chartGlobal"></canvas>
+            <div id="percCenter">0%</div>
         </div>
     </section>
 
     <section class="daily-grid">
-        <div class="card"><p class="card-header">META DO DIA</p><div id="metaDiaValue" class="card-value">R$ 0</div></div>
-        <div class="card" style="border-left: 5px solid var(--brand-orange);"><p class="card-header">VENDIDO HOJE</p><div id="vendidoHojeValue" class="card-value" style="color:var(--brand-orange)">R$ 0</div></div>
+        <div class="card"><p style="color:var(--text-secondary)">META DO DIA</p><div id="val-dia-meta" class="card-value">R$ 0</div></div>
+        <div class="card" style="border-right: 4px solid var(--brand-orange)"><p style="color:var(--text-secondary)">VENDIDO HOJE</p><div id="val-dia-vendido" class="card-value" style="color:var(--brand-orange)">R$ 0</div></div>
     </section>
 
     <section class="risk-section">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1vh;">
-            <p style="font-family:'Orbitron'; font-size:1.3vh; color:var(--text-secondary);">TENDÊNCIA DE VENDAS (HISTÓRICO)</p>
-            <div id="alertBeacon">Sincronizando...</div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <p style="font-family:'Orbitron'; font-size:1.2vh; color:var(--text-secondary);">HISTÓRICO DE TENDÊNCIA E RISCO</p>
+            <div id="alertBeacon">ANALISANDO...</div>
         </div>
-        <div style="flex:1; position:relative;"><canvas id="riskLineChart"></canvas></div>
+        <div class="chart-wrapper">
+            <canvas id="chartRisk"></canvas>
+        </div>
     </section>
 </div>
 
 <script>
-    // URL da sua planilha com acesso de leitor concedido
     const SHEET_ID = '1jMprhV4a_-mc_p-0PRo3akIT_mJfWW7ATnxSQdwz2xM';
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    let globalChart, riskLineChart;
+    let chartG, chartR;
     const formatBRL = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
-    function init() {
-        globalChart = new Chart(document.getElementById('globalDoughnutChart'), {
-            type: 'doughnut',
-            data: { datasets: [{ data: [0, 100], backgroundColor: ['#243776', '#141629'], borderWidth: 0 }] },
-            options: { cutout: '88%', plugins: { tooltip: { enabled: false } } }
-        });
-
-        riskLineChart = new Chart(document.getElementById('riskLineChart'), {
-            type: 'line',
-            data: { labels: [], datasets: [{ data: [], borderColor: '#f26122', tension: 0.4, fill: true, backgroundColor: 'rgba(242, 97, 34, 0.1)', borderWidth: 4, pointRadius: 0 }] },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false }, x: { ticks: { color: '#8b9bb4' }, grid: { display: false } } }, plugins: { legend: { enabled: false } } }
-        });
-        updateData();
-        setInterval(updateData, 30000); 
+    // Função para animar números subindo
+    function animateNumber(id, target) {
+        const el = document.getElementById(id);
+        let current = 0;
+        const speed = 2000; // 2 segundos de animação
+        const step = target / (speed / 16);
+        
+        const update = () => {
+            current += step;
+            if (current < target) {
+                el.innerText = formatBRL(Math.floor(current));
+                requestAnimationFrame(update);
+            } else {
+                el.innerText = formatBRL(target);
+            }
+        };
+        update();
     }
 
-    async function updateData() {
+    function initCharts() {
+        chartG = new Chart(document.getElementById('chartGlobal'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', '#1a1a2e'], borderWidth: 0 }] },
+            options: { cutout: '85%', plugins: { tooltip: { enabled: false } }, animation: { duration: 2500, easing: 'easeOutQuart' } }
+        });
+
+        chartR = new Chart(document.getElementById('chartRisk'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ data: [], borderColor: '#f26122', backgroundColor: 'rgba(242, 97, 34, 0.1)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4 }] },
+            options: { 
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#8b9bb4' } } },
+                plugins: { legend: { enabled: false } },
+                animation: { duration: 3000, easing: 'easeInOutQuart' } // Motion lento da linha
+            }
+        });
+    }
+
+    async function update() {
         try {
             const res = await fetch(GVIZ_URL);
             const text = await res.text();
-            // Limpeza do JSON que o Google retorna (removendo prefixo/sufixo da API)
             const json = JSON.parse(text.substring(47, text.length - 2));
             const rows = json.table.rows;
 
-            let totalVendido = 0, totalMeta = 0;
-            let labels = [], valores = [];
+            let totalV = 0, totalM = 0;
+            let histLabels = [], histValues = [];
 
-            rows.forEach(row => {
-                const venda = row.c[1] ? (row.c[1].v || 0) : 0;
-                const meta = row.c[2] ? (row.c[2].v || 0) : 0;
-                totalVendido += venda;
-                totalMeta += meta;
-                labels.push(row.c[0] ? row.c[0].f || row.c[0].v : ''); 
-                valores.push(venda);
+            rows.forEach((r, i) => {
+                const v = r.c[1] ? r.c[1].v : 0;
+                const m = r.c[2] ? r.c[2].v : 0;
+                totalV += v; totalM += m;
+                // Pega o rótulo da data (coluna A)
+                histLabels.push(r.c[0] ? (r.c[0].f || r.c[0].v) : i);
+                histValues.push(v);
             });
 
             const lastRow = rows[rows.length - 1];
-            const vendaHoje = lastRow.c[1] ? lastRow.c[1].v : 0;
-            const metaDia = lastRow.c[2] ? lastRow.c[2].v : 0;
+            const vHoje = lastRow.c[1].v;
+            const mHoje = lastRow.c[2].v;
+            const pGlobal = (totalV / totalM) * 100;
+            const pDia = (vHoje / mHoje) * 100;
+
+            // Ativar Motion nos Números
+            animateNumber('val-global-meta', totalM);
+            animateNumber('val-global-vendido', totalV);
+            animateNumber('val-global-falta', totalM - totalV);
+            animateNumber('val-dia-meta', mHoje);
+            animateNumber('val-dia-vendido', vHoje);
             
-            const percDia = (vendaHoje / (metaDia || 1)) * 100;
-            const percGlobal = (totalVendido / (totalMeta || 1)) * 100;
+            document.getElementById('percCenter').innerText = pGlobal.toFixed(0) + '%';
 
-            // Update UI
-            document.getElementById('metaGlobalValue').innerText = formatBRL(totalMeta);
-            document.getElementById('globalVendido').innerText = formatBRL(totalVendido);
-            document.getElementById('globalRestante').innerText = formatBRL(Math.max(0, totalMeta - totalVendido));
-            document.getElementById('globalPercentageText').innerText = `${percGlobal.toFixed(0)}%`;
-            document.getElementById('metaDiaValue').innerText = formatBRL(metaDia);
-            document.getElementById('vendidoHojeValue').innerText = formatBRL(vendaHoje);
+            // Update Gráficos
+            chartG.data.datasets[0].data = [pGlobal, 100 - pGlobal];
+            chartG.update();
 
-            // Charts
-            globalChart.data.datasets[0].data = [percGlobal, 100 - percGlobal];
-            globalChart.update();
+            chartR.data.labels = histLabels.slice(-10); // Últimos 10 registros
+            chartR.data.datasets[0].data = histValues.slice(-10);
+            chartR.update();
 
-            riskLineChart.data.labels = labels.slice(-10);
-            riskLineChart.data.datasets[0].data = valores.slice(-10);
-            riskLineChart.update();
+            // Status de Risco
+            const b = document.getElementById('alertBeacon');
+            if(pDia < 60) { b.style.background = '#ff0033'; b.innerText = 'RISCO: ALTO'; }
+            else if(pDia < 100) { b.style.background = '#ffcc00'; b.style.color = '#000'; b.innerText = 'RISCO: MÉDIO'; }
+            else { b.style.background = '#00ff66'; b.style.color = '#000'; b.innerText = 'META ATINGIDA'; }
 
-            // Alerta
-            const beacon = document.getElementById('alertBeacon');
-            if(percDia < 50) { beacon.style.background = '#ff0055'; beacon.innerText = "🚨 RISCO ALTO"; }
-            else if(percDia < 100) { beacon.style.background = '#fe0'; beacon.style.color = '#000'; beacon.innerText = "⚠️ ACELERAR"; }
-            else { beacon.style.background = '#0f9'; beacon.style.color = '#000'; beacon.innerText = "🏆 META BATIDA"; }
-
-        } catch (err) { console.error("Erro ao carregar dados", err); }
+        } catch (e) { console.error(e); }
     }
 
-    window.onload = init;
+    window.onload = () => { initCharts(); update(); setInterval(update, 60000); };
 </script>
 </body>
 </html>
