@@ -8,102 +8,79 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-orange: #f26122; --brand-orange-glow: rgba(242, 97, 34, 0.4);
-            --brand-blue: #243776; --brand-blue-glow: rgba(36, 55, 118, 0.6);
-            --bg-disk: #030306; --text-primary: #fff; --text-secondary: #8b9bb4;
+            --brand-orange: #f26122; --brand-orange-glow: rgba(242, 97, 34, 0.5);
+            --brand-blue: #243776; --brand-blue-glow: rgba(36, 55, 118, 0.8);
+            --bg-disk: #020204; --text-primary: #fff; --text-secondary: #8b9bb4;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* FUNDO COM VIBRAÇÃO E GRADIENTE AZUL */
         body { 
             background-color: var(--bg-disk);
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(36, 55, 118, 0.3) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(36, 55, 118, 0.2) 0%, transparent 40%);
+                radial-gradient(circle at 50% 50%, rgba(36, 55, 118, 0.15) 0%, transparent 70%);
             color: var(--text-primary); 
             font-family: 'Rajdhani', sans-serif; 
-            overflow: hidden; 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 1.5vh; 
-            position: relative;
+            overflow: hidden; height: 100vh; 
+            display: flex; align-items: center; justify-content: center; padding: 1.5vh;
+            animation: bgPulse 8s infinite alternate ease-in-out;
+        }
+        @keyframes bgPulse { 
+            0% { background-color: #020204; } 
+            100% { background-color: #05070f; } 
         }
 
-        /* Animação de Vibração Suave no Fundo */
-        body::before {
-            content: "";
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3%3Ffilter id="n"%3%3FfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3%3F/filter%3%3Frect width="100%" height="100%" filter="url(%23n)"/%3%3F/svg%3%3F');
-            opacity: 0.015; /* Vibração quase imperceptível */
-            pointer-events: none;
-            animation: vibrateBg 10s infinite linear;
-        }
-        @keyframes vibrateBg { from { transform: translate(0,0); } to { transform: translate(1%,1%); } }
+        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; position: relative; }
 
-        .main-container { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1.5vh; z-index: 10; }
-
-        /* Meta Global - FOCO AZUL */
+        /* Meta Global */
         .global-section { 
-            background: rgba(10, 11, 20, 0.6); /* Semi-Transparente */
-            border: 2px solid var(--brand-blue); /* Borda Azul Sutil */
-            border-radius: 20px; 
-            padding: 4vh; 
-            height: 40vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            position: relative; 
-            box-shadow: 0 0 20px var(--brand-blue-glow); /* Glow Azul */
-            backdrop-filter: blur(10px);
+            background: rgba(10, 11, 25, 0.4);
+            border: 1px solid var(--brand-blue);
+            border-radius: 20px; padding: 4vh; height: 38vh;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: inset 0 0 30px rgba(36, 55, 118, 0.2), 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
         }
-        .global-value { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 15px var(--brand-orange-glow); }
+        .global-value { font-family: 'Orbitron'; font-size: 8.5vh; color: var(--brand-orange); text-shadow: 0 0 20px var(--brand-orange-glow); }
         .global-chart-container { width: 30vh; height: 30vh; position: relative; display: flex; align-items: center; justify-content: center; }
         #percCenter { position: absolute; font-family: 'Orbitron'; font-size: 5.5vh; color: var(--brand-orange); }
 
-        /* Grid Central - FOCO LARANJA */
+        /* Cards Diários */
         .daily-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vh; height: 18vh; }
         .card { 
-            background: rgba(36, 55, 118, 0.1); /* Fundo Azul Transparente */
-            border-radius: 15px; 
-            padding: 2.5vh; 
-            border: 1px solid rgba(255,255,255,0.03); 
-            backdrop-filter: blur(5px);
+            background: rgba(36, 55, 118, 0.08);
+            border-radius: 15px; padding: 2.5vh;
+            border: 1px solid rgba(36, 55, 118, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; justify-content: center;
         }
         .card-value { font-family: 'Orbitron'; font-size: 5vh; font-weight: 900; }
 
-        /* Gráfico de Risco Inferior */
+        /* Gráfico de Risco Inferior OTIMIZADO */
         .risk-section { 
-            background: rgba(10, 11, 20, 0.7); 
-            flex: 1; 
-            border-radius: 20px; 
-            padding: 2vh; 
-            border: 1px solid var(--brand-blue); /* Borda Azul */
-            box-shadow: 0 0 10px var(--brand-blue-glow);
-            display: flex; 
-            flex-direction: column; 
-            backdrop-filter: blur(8px);
+            background: rgba(5, 7, 15, 0.6);
+            flex: 1; border-radius: 20px; padding: 2vh;
+            border: 1px solid rgba(36, 55, 118, 0.5);
+            display: flex; flex-direction: column;
+            overflow: hidden;
         }
-        .risk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; }
-        #statusLabel { padding: 0.5vh 2vh; border-radius: 4px; font-family: 'Orbitron'; font-size: 1.4vh; font-weight: bold; }
+        .risk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1vh; z-index: 2; }
+        #statusLabel { padding: 0.6vh 2.5vh; border-radius: 40px; font-family: 'Orbitron'; font-size: 1.2vh; font-weight: bold; letter-spacing: 1px; }
         
-        .chart-container { flex: 1; position: relative; }
+        .chart-container { flex: 1; position: relative; width: 105%; margin-left: -2.5%; } /* Força a linha a sair da borda */
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header style="text-align:center; height: 2vh; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:4px;">NATURAL IMPORTS | GLOBAL OPERATIONS COMMAND CENTER</header>
+    <header style="text-align:center; height: 2vh; font-family:'Orbitron'; font-size:1.1vh; color:var(--brand-blue); letter-spacing:6px; opacity: 0.8;">NATURAL IMPORTS | COMMAND CENTER</header>
 
     <section class="global-section">
         <div>
-            <p style="color:var(--text-secondary); font-family:'Orbitron'; font-size:1.4vh;">META GLOBAL ACUMULADA</p>
+            <p style="color:var(--text-secondary); font-family:'Orbitron'; font-size:1.4vh; letter-spacing:2px;">PROGRESSO GLOBAL</p>
             <div id="val-global-meta" class="global-value">R$ 0</div>
-            <div style="display:flex; gap:4vh; font-size:2vh; margin-top:1vh;">
-                <p style="color:var(--text-secondary)">Realizado: <span id="val-global-vendido" style="color:#fff">R$ 0</span></p>
-                <p style="color:var(--text-secondary)">Gap: <span id="val-global-falta" style="color:var(--brand-orange)">R$ 0</span></p>
+            <div style="display:flex; gap:4vh; font-size:1.8vh; margin-top:1.5vh; font-family:'Orbitron'">
+                <p style="color:var(--brand-blue)">REAL <span id="val-global-vendido" style="color:#fff">R$ 0</span></p>
+                <p style="color:var(--brand-blue)">GAP <span id="val-global-falta" style="color:var(--brand-orange)">R$ 0</span></p>
             </div>
         </div>
         <div class="global-chart-container">
@@ -113,14 +90,14 @@
     </section>
 
     <section class="daily-grid">
-        <div class="card" style="border-left: 3px solid var(--brand-blue);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">OBJETIVO DO DIA</p><div id="val-dia-meta" class="card-value">R$ 0</div></div>
-        <div class="card" style="border-left: 3px solid var(--brand-orange);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">REALIZADO HOJE</p><div id="val-dia-vendido" class="card-value" style="color:var(--brand-orange); text-shadow:0 0 10px var(--brand-orange-glow)">R$ 0</div></div>
+        <div class="card" style="border-top: 2px solid var(--brand-blue);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">OBJETIVO HOJE</p><div id="val-dia-meta" class="card-value">R$ 0</div></div>
+        <div class="card" style="border-top: 2px solid var(--brand-orange);"><p style="color:var(--text-secondary); font-size:1.3vh; font-family:'Orbitron'">VENDIDO AGORA</p><div id="val-dia-vendido" class="card-value" style="color:var(--brand-orange); text-shadow:0 0 15px var(--brand-orange-glow)">R$ 0</div></div>
     </section>
 
     <section class="risk-section">
         <div class="risk-header">
-            <p style="font-family:'Orbitron'; font-size:1.2vh; color:var(--text-secondary);">PROJEÇÃO DE ATINGIMENTO (REAL VS META)</p>
-            <div id="statusLabel">CALCULANDO RISCO...</div>
+            <p style="font-family:'Orbitron'; font-size:1.2vh; color:var(--text-secondary); letter-spacing:1px;">CURVA DE ATINGIMENTO DA META DIÁRIA</p>
+            <div id="statusLabel">SINCRONIZANDO...</div>
         </div>
         <div class="chart-container">
             <canvas id="chartRisk"></canvas>
@@ -141,10 +118,8 @@
         const el = document.getElementById(id);
         const start = lastValues[id] || 0;
         if (start === target) return;
-
         let startTime = null;
-        const duration = 1500; 
-
+        const duration = 2000; 
         function step(timestamp) {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
@@ -159,28 +134,38 @@
     function init() {
         chartG = new Chart(document.getElementById('chartGlobal'), {
             type: 'doughnut',
-            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', 'rgba(36, 55, 118, 0.1)'], borderWidth: 0 }] }, // Laranja ID vs Fundo Transparente
-            options: { cutout: '85%', plugins: { tooltip: { enabled: false } }, animation: { duration: 2000, easing: 'easeOutQuart' } }
+            data: { datasets: [{ data: [0, 100], backgroundColor: ['#f26122', 'rgba(36, 55, 118, 0.15)'], borderWidth: 0 }] },
+            options: { cutout: '82%', plugins: { tooltip: { enabled: false } }, animation: { duration: 2500, easing: 'easeOutExpo' } }
         });
 
         chartR = new Chart(document.getElementById('chartRisk'), {
             type: 'line',
             data: { 
-                labels: ['0%','25%','50%','75%','100%'], 
+                labels: ['START', '', '', '', 'META'], 
                 datasets: [
-                    { label: 'Realizado', data: [0, 0], borderColor: '#f26122', borderWidth: 5, fill: true, backgroundColor: 'rgba(242, 97, 34, 0.1)', tension: 0.1 },
-                    { label: 'Caminho Meta', data: [0, 100], borderColor: 'rgba(255,255,255,0.05)', borderDash: [5,5], borderWidth: 1, fill: false }
+                    { 
+                        data: [0, null, null, null, null], 
+                        borderColor: '#f26122', borderWidth: 6, fill: true, 
+                        backgroundColor: 'rgba(242, 97, 34, 0.15)', tension: 0.4, pointRadius: 0 
+                    },
+                    { 
+                        data: [0, 25, 50, 75, 100], 
+                        borderColor: 'rgba(36, 55, 118, 0.4)', borderDash: [10,10], borderWidth: 1, fill: false, pointRadius: 0 
+                    }
                 ]
             },
             options: { 
                 responsive: true, maintainAspectRatio: false,
-                scales: { y: { display: false, min: 0 }, x: { ticks: { color: '#444' }, grid: { display: false } } },
+                scales: { 
+                    y: { display: false, min: 0 }, 
+                    x: { grid: { display: false }, ticks: { color: '#243776', font: { family: 'Orbitron', size: 10 } } } 
+                },
                 plugins: { legend: { enabled: false } },
-                animation: { duration: 1500, easing: 'easeOutCubic' }
+                animation: { duration: 3000, easing: 'easeOutQuart' }
             }
         });
         update();
-        setInterval(update, 30000);
+        setInterval(update, 45000);
     }
 
     async function update() {
@@ -212,14 +197,19 @@
             chartG.data.datasets[0].data = [pG, 100 - pG];
             chartG.update();
 
-            chartR.data.datasets[0].data = [0, vH]; 
-            chartR.options.scales.y.max = mH; 
+            // Lógica do Gráfico de Risco: preenche a linha até a posição atual da meta
+            // Ex: Se vendeu 70% da meta, a linha laranja vai até o ponto 4 (quase o final)
+            const progressIndex = Math.min(Math.floor((pD / 100) * 4), 4);
+            let riskData = [0, null, null, null, null];
+            riskData[4] = vH; // Forçamos o ponto final ser o valor vendido atual
+            chartR.data.datasets[0].data = [0, null, null, null, vH]; 
+            chartR.options.scales.y.max = Math.max(mH, vH); 
             chartR.update();
 
             const lb = document.getElementById('statusLabel');
-            if(pD < 50) { lb.style.background = '#ff0044'; lb.innerText = 'RISCO CRÍTICO'; }
-            else if(pD < 90) { lb.style.background = '#f26122'; lb.innerText = 'RITMO EM ATENÇÃO'; }
-            else { lb.style.background = '#00ff88'; lb.style.color = '#000'; lb.innerText = 'META ATINGIDA'; }
+            if(pD < 50) { lb.style.background = '#ff0044'; lb.style.boxShadow = "0 0 15px #ff0044"; lb.innerText = 'RISCO CRÍTICO'; }
+            else if(pD < 95) { lb.style.background = '#f26122'; lb.style.boxShadow = "0 0 15px #f26122"; lb.innerText = 'RITMO OPERACIONAL'; }
+            else { lb.style.background = '#00ff88'; lb.style.color = '#000'; lb.style.boxShadow = "0 0 15px #00ff88"; lb.innerText = 'META ATINGIDA'; }
 
         } catch (e) { console.error(e); }
     }
